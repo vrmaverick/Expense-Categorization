@@ -10,7 +10,7 @@ It is designed as a core module for a **Personal Finance AI Agent** that can ana
 
 ---
 
-## 🔍 Project Overview
+## Project Overview
 
 **Goal:** Given a text description of a financial transaction, assign it to a meaningful category.
 
@@ -23,7 +23,7 @@ It is designed as a core module for a **Personal Finance AI Agent** that can ana
 
 ---
 
-## 🧠 Model Architecture
+## Model Architecture
 
 1. **Text Input**  
    Raw expense description (e.g., `"Dominos Pizza delivery"`).
