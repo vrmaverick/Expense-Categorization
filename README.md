@@ -13,6 +13,7 @@ It is designed as a core module for a **Personal Finance AI Agent** that can ana
 ## Project Overview
 
 **Goal:** Given a text description of a financial transaction, assign it to a meaningful category.
+Building a **practical, accurate, and explainable** classifier suitable for a personal finance assistant or agentic AI system.
 
 **Key ideas:**
 
