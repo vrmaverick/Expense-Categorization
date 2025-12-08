@@ -1,6 +1,6 @@
 import API_Config
 import requests
-
+import city_index
 # def Convert(response,amount,User_output = 'USD'):
 #     INR_rate = response["rates"]["INR"]
 #     if User_output != 'USD':
@@ -11,6 +11,18 @@ import requests
 #     else:
 #         amount = amount/INR_rate
 #         amount = amount * desired_rate
+
+def city(city_name,country_name,output_currency):
+    currency_scale = API_Call_Conversion(amount=1,desired_currency= output_currency)
+    mumbai_data = city_index.fetch_city_data("Mumbai", "India")
+    b_data = city_index.fetch_city_data(city_name, country_name)
+
+    # 2) Compute scale factor: how much more expensive Boston is vs Mumbai
+    scale = city_index.get_scale_factor(mumbai_data, b_data,currency_scale)
+    print(f"Scale factor ({city_name} vs Mumbai): {scale:.3f}")
+
+    return scale
+
 
 def Convert(response, amount, User_output='USD'):
     """

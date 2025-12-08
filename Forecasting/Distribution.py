@@ -22,3 +22,5 @@ def Hypotesis_testing(sample,data1,data2):
     # Choose closer distribution by smaller KS statistic (or larger p-value)
     chosen = "Dataset 1" if stat1 < stat2 else "Dataset 2"
     print("Sample is closer to:", chosen)
+
+    return chosen
