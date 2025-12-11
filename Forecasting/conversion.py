@@ -1,6 +1,8 @@
-import API_Config
+from . import API_Config
+# import API_Config
 import requests
-import city_index
+from . import city_index
+# import city_index
 # def Convert(response,amount,User_output = 'USD'):
 #     INR_rate = response["rates"]["INR"]
 #     if User_output != 'USD':

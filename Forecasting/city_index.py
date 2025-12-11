@@ -1,6 +1,7 @@
 import requests
 import numpy as np
-import conversion
+from . import conversion
+# import conversion
 
 RAPIDAPI_KEY = "aea1c9d920mshc5251b8f872c9e1p1a5a26jsn3106a948362e"
 RAPIDAPI_HOST = "cost-of-living-and-prices.p.rapidapi.com"

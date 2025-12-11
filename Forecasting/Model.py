@@ -2,11 +2,12 @@ from joblib import load
 import numpy as np
 import pandas as pd
 
-import Distribution as d
+from . import Distribution as d
+# import Distribution as d
 # from prophet import Prophet  # or from fbprophet import Prophet
 # import pandas as pd
 
-def Load_Model(config_path = '../model/expense_config_2.pkl'):
+def Load_Model(config_path = './model/expense_config_2.pkl'):
 # Load trained models and config
     # models = joblib.load(model_path)   # dict: {"rf": ..., "gbr": ..., "ridge": ...}
     config = load(config_path)
@@ -15,7 +16,7 @@ def Load_Model(config_path = '../model/expense_config_2.pkl'):
     return WINDOW,HORIZON
 
 def ensemble_predict_array(X_input):
-    models = load('../model/expense_models_2.pkl')
+    models = load('./model/expense_models_2.pkl')
     preds = np.column_stack([m.predict(X_input) for m in models.values()])
     return preds.mean(axis=1)
 
@@ -190,11 +191,12 @@ def Predict(user_expenses,user_dates):
 
 def Generate_sample():
     np.random.seed(42)
-    size = 1200
+    size = 60
+    print(size)
 
     # Example: mostly low-range spends with some noise
     user_expenses = np.random.uniform(200, 1500, size=size).round(2).tolist()
-
+    print('2')
     # -----------------------------
     # 2. Create 60 dates with gaps
     # -----------------------------

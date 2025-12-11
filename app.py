@@ -25,28 +25,28 @@ st.header("Single expense categorization")
 user_text = st.text_input("Enter expense description", value="Uber ride last night")
 
 if st.button("Predict category"):
-    category, probs = predict_category(user_text, return_probs=True)
+    category = Categorization(user_text)
     st.success(f"Predicted category: {category}")
     st.write("Raw probabilities (per class index):")
-    st.write(np.round(probs, 3))
+    # st.write(np.round(probs, 3))
 
-st.header("Batch expense categorization")
-st.caption("Enter one expense per line.")
+# st.header("Batch expense categorization")
+# st.caption("Enter one expense per line.")
 
-batch_input = st.text_area(
-    "Expenses",
-    value="Dominos pizza\nElectricity bill\nZomato order, paneer tikka",
-    height=150,
-)
+# batch_input = st.text_area(
+#     "Expenses",
+#     value="Dominos pizza\nElectricity bill\nZomato order, paneer tikka",
+#     height=150,
+# )
 
-if st.button("Predict categories for batch"):
-    lines = [x.strip() for x in batch_input.split("\n") if x.strip()]
-    if lines:
-        cats = predict_bulk(lines)
-        df = pd.DataFrame({"expense": lines, "category": cats})
-        st.dataframe(df)
-    else:
-        st.warning("Please enter at least one expense description.")
+# if st.button("Predict categories for batch"):
+#     lines = [x.strip() for x in batch_input.split("\n") if x.strip()]
+#     if lines:
+#         cats = predict_bulk(lines)
+#         df = pd.DataFrame({"expense": lines, "category": cats})
+#         st.dataframe(df)
+#     else:
+#         st.warning("Please enter at least one expense description.")
 
 # ---------- Forecasting section ----------
 st.header("Expense forecasting demo")
@@ -56,14 +56,14 @@ if st.button("Run forecast"):
 
     # Your existing model API
     user_expenses, user_dates = md.Generate_sample()
-    avg = md.Predict()
-    forecast_mumbai_inr = np.array(avg)
+    avg = md.Predict(user_expenses,user_dates)
+    forecast_mumbai_inr = float(avg) * 30
     forecast_city_inr = forecast_mumbai_inr * scale
 
     # Simple table view
     df_forecast = pd.DataFrame(
         {
-            "date": user_dates[: len(forecast_city_inr)],
+            "date": [user_dates[-1]],
             f"forecast_{city_name}_{model_currency}": forecast_mumbai_inr,
             f"forecast_{city_name}_{output_currency}": forecast_city_inr,
         }

@@ -10,7 +10,7 @@ def Get_Currency_API_key(path = os.path.abspath(__file__)):
         last_folder = os.path.basename(os.path.normpath(current_dir))
         print(f"Last folder in '{current_dir}': {last_folder}")
 
-        if last_folder == 'Finance-Management-using-AI':
+        if last_folder == 'Expense-Categorization':
             i = 0
         else :
             path = current_dir
@@ -22,7 +22,7 @@ def Get_Currency_API_key(path = os.path.abspath(__file__)):
 
     # Construct the full path to secrets.yaml
     secrets_file_path = os.path.join(current_dir, 'secrets.yaml')
-    print(secrets_file_path)
+    # print(secrets_file_path)
 
     try:
         with open(secrets_file_path, 'r') as file:

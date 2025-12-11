@@ -27,20 +27,20 @@ def Categorization(text):
 
     #change paths to models
     print("Loading trained ML models...")
-    svm = joblib.load("/content/svm_classifier.pkl")
-    xgb = joblib.load("/content/xgb_classifier.pkl")
-    label_encoder = joblib.load("/content/label_encoder.pkl") # Category Encoder
-    scaler = joblib.load("/content/scaler.pkl")               # Feature scaler for SVM
+    svm = joblib.load("./Categorization_model/svm_classifier.pkl")
+    xgb = joblib.load("./Categorization_model/xgb_classifier.pkl")
+    label_encoder = joblib.load("./Categorization_model/label_encoder.pkl") # Category Encoder
+    scaler = joblib.load("./Categorization_model/scaler.pkl")               # Feature scaler for SVM
 
     print("Categorizer Ready ✔")
-    
-    return predict_category(text,encoder,scaler,svm,xgb,label_encoder,return_probs=False)
+
+    return predict_category(text,encoder,scaler,svm,xgb,label_encoder)
 
 
 # Core Function: Predict Category for Single or Batch Input
 
 
-def predict_category(text,encoder,scaler,svm,xgb,label_encoder,return_probs=False):
+def predict_category(text,encoder,scaler,svm,xgb,label_encoder):
     """
     Predicts category of a single expense string.
 
@@ -74,8 +74,8 @@ def predict_category(text,encoder,scaler,svm,xgb,label_encoder,return_probs=Fals
     pred_idx = np.argmax(final_proba)
     category = label_encoder.inverse_transform([pred_idx])[0]
 
-    if return_probs:
-        return category, final_proba.tolist()
+    # if return_probs:
+    #     return category, final_proba.tolist()
 
     return category
 
