@@ -28,3 +28,4 @@ if __name__ == '__main__':
     # print("Boston-scaled forecast (INR):", forecast_city_inr)
     # print("Boston-scaled forecast (USD):", forecast_city_inr * scale)
     #         # Predict_Model(model=model)
+    
