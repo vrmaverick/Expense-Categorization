@@ -165,7 +165,7 @@ from Forecasting.Distribution import Distributions
 
 # ---------------- Page config ----------------
 st.set_page_config(
-    page_title="Smart Expense Categorizer & Forecaster",
+    page_title="Mint Sage",
     page_icon="💸",
     layout="wide",
 )
@@ -304,36 +304,82 @@ def log_fc(msg: str):
     fc_log_container.write(f"[Forecasting] {msg}")
 
 # ---------------- Tabs ----------------
-tab_home, tab_cat, tab_forecast = st.tabs(
-    ["🏠 Home", "🧾 Categorization", "📈 Forecasting"]
+tab_home, tab_cat, tab_forecast, tab_opt = st.tabs(
+    ["🏠 Home", "🧾 Categorization", "📈 Forecasting", "🧠 Optimization"]
 )
 
-# ---------------- Home tab ----------------
+# # ---------------- Home tab ----------------
+# with tab_home:
+#     st.title("Smart Expense Categorizer & Forecaster")
+
+#     col1, col2 = st.columns([2, 1])
+#     with col1:
+#         st.markdown(
+#             """
+#             This demo combines an NLP-based expense categorizer with a time‑series
+#             forecaster to help you understand and project your spending.
+#             """
+#         )
+#         st.markdown(
+#             """
+#             **You can:**
+#             - Enter an expense description and view its predicted category.
+#             - Run a monthly expense forecast for a chosen city and currency.
+#             - Inspect logs, resource usage, probabilities, and fitted distributions.
+#             """
+#         )
+#     with col2:
+#         st.info(
+#             f"Current demo location: **{city_name}, {country_name}**\n\n"
+#             f"Forecasts are shown in **{model_currency}** and converted to "
+#             f"**{output_currency}**."
+#         )
+
 with tab_home:
-    st.title("Smart Expense Categorizer & Forecaster")
+    st.title("Mint Sage – Smart Expense Categorizer & Forecaster")
 
     col1, col2 = st.columns([2, 1])
+
     with col1:
         st.markdown(
             """
-            This demo combines an NLP-based expense categorizer with a time‑series
-            forecaster to help you understand and project your spending.
+            **Mint Sage** is an AI-based expense tracker, forecaster, and optimizer
+            that helps you understand where your money goes and how to improve your spending habits.
             """
         )
         st.markdown(
             """
-            **You can:**
-            - Enter an expense description and view its predicted category.
-            - Run a monthly expense forecast for a chosen city and currency.
-            - Inspect logs, resource usage, probabilities, and fitted distributions.
+            ### What this demo showcases
+            - **NLP categorization:** MiniLM (Sentence-BERT) + SVM/XGBoost ensemble to map raw transaction text into categories like Food, Transport, Utilities, etc.
+            - **Time-series forecasting:** Sliding 60-day window with rolling stats and calendar features to predict the average expense over the next 30 days.
+            - **Probability modeling:** Two beta-like expense distributions combined via statistical modeling and hypothesis testing for robust normalization of unseen sequence.
             """
         )
+        with st.expander("Behind the scenes"):
+            st.markdown(
+                """
+                - **Data sources:** Two Kaggle finance datasets in INR plus a labeled dataset for categorization.
+                - **Baes Models tested:** Exponential Smoothing, SARIMA, Prophet, Random Forest, Gradient Boosting, Ridge, and an ensemble tuned on MAE.
+                - **Optimization:** LLM-powered optimization agent for budget advice, subscription cleanup, and goal-based planning.
+                """
+            )
+
     with col2:
+        st.markdown("### Project snapshot")
         st.info(
             f"Current demo location: **{city_name}, {country_name}**\n\n"
-            f"Forecasts are shown in **{model_currency}** and converted to "
-            f"**{output_currency}**."
+            f"Forecasts are computed in **{model_currency}** and converted to "
+            f"**{output_currency}** based on your selection."
         )
+        st.markdown(
+            """
+            **Team 104**
+            - Viraj: EDA, LLM integration, APIs, frontend, Plaid integration.[file:193]
+            - Vedant: Distribution modeling, hypothesis testing, forecasting module.[file:193]
+            - Archita: Categorization engine (TF‑IDF → USE → MiniLM), SVM+XGBoost ensemble.[file:193]
+            """
+        )
+
 
 # ---------------- Categorization tab ----------------
 # with tab_cat:
@@ -618,3 +664,95 @@ with tab_forecast:
         m1.metric("Latency (s)", f"{dt:.3f}")
         m2.metric("CPU usage (%)", f"{cpu_after}")
         m3.metric("Memory usage (%)", f"{mem_after}")
+
+with tab_opt:
+    st.header("Optimization assistant")
+
+    st.markdown(
+        """
+        This section combines your **historical expenses**, their **categories**,
+        and the **latest forecast** into a single view, then lets you ask
+        free-form questions about how to optimize your spending.
+        """
+    )
+
+    # --- Data source controls for optimization DF ---
+    opt_source = st.radio(
+        "Choose optimization data source",
+        ["Generate sample data", "Upload CSV (date, expense, category, is_forecast)"],
+        index=0,
+        key="opt_source",
+    )
+
+    opt_uploaded = None
+    if opt_source == "Upload CSV (date, expense, category, is_forecast)":
+        opt_uploaded = st.file_uploader(
+            "Upload CSV with columns: date, expense, category, is_forecast",
+            type="csv",
+            key="opt_csv",
+        )
+
+    # Build / load opt_df
+    if opt_source == "Generate sample data":
+        # Generate synthetic optimization dataframe
+        if "opt_df" not in st.session_state or st.button("Regenerate sample data", key="regen_opt"):
+            np.random.seed(0)
+            sample_dates = pd.date_range("2025-01-01", periods=90, freq="D")
+            sample_exp = np.random.uniform(200, 1500, size=90).round(2)
+            sample_cat = np.random.choice(
+                ["Food", "Transport", "Shopping", "Utilities", "Health"],
+                size=90,
+            )
+            is_fc = [False] * 89 + [True]  # last row as forecast marker
+            st.session_state.opt_df = pd.DataFrame(
+                {
+                    "date": sample_dates,
+                    "expense": sample_exp,
+                    "category": sample_cat,
+                    "is_forecast": is_fc,
+                }
+            )
+        opt_df = st.session_state.opt_df
+
+    else:
+        if opt_uploaded is None:
+            st.warning("Upload a CSV to use it in the optimizer, or switch to generated data.")
+            st.stop()
+
+        df_in = pd.read_csv(opt_uploaded)
+        required_cols = {"date", "expense", "category", "is_forecast"}
+        if not required_cols.issubset(df_in.columns):
+            st.error(f"CSV must contain columns: {', '.join(sorted(required_cols))}")
+            st.stop()
+
+        df_in = df_in.copy()
+        df_in["date"] = pd.to_datetime(df_in["date"])
+        df_in["expense"] = df_in["expense"].astype(float)
+        df_in["category"] = df_in["category"].astype(str)
+        df_in["is_forecast"] = df_in["is_forecast"].astype(bool)
+        opt_df = df_in.sort_values("date").reset_index(drop=True)
+
+    # Top: show data + simple summary
+    st.subheader("DataFrame")
+    st.dataframe(opt_df.set_index("date"))
+
+    with st.expander("Quick stats"):
+        total_hist = opt_df.loc[~opt_df["is_forecast"], "expense"].sum()
+        total_fc = opt_df.loc[opt_df["is_forecast"], "expense"].sum()
+        st.write(f"Historical total: {total_hist:,.2f}")
+        st.write(f"Forecasted total (marked as forecast): {total_fc:,.2f}")
+
+    # Q&A interface
+    st.subheader("Ask an optimization question")
+
+    question = st.text_area(
+        "Question",
+        placeholder="Example: How can I reduce my food expenses next month?",
+        height=80,
+        key="opt_question",
+    )
+
+    if st.button("Generate answer", key="opt_answer_btn"):
+        with st.spinner("Analyzing your expenses and forecast..."):
+            answer = optimize_answer(opt_df, question)
+        st.text_area("Answer", value=answer, height=160, key="opt_answer")

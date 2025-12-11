@@ -218,40 +218,32 @@ def Predict(user_expenses,user_dates):
 
 #     return user_expenses[:-1],user_dates[:-1]
 
-def Generate_sample(n, low=50, high=1500, alpha=1.75, beta=6.23):
-    """
-    Generate n samples from a scaled Beta(alpha, beta) distribution
-    in the range [low, high], plus irregular dates with 1–3 day gaps.
-    """
+def Generate_sample(n, p1=0.4):
     np.random.seed(42)
-    size = n
+    data1, data2 = d.Distributions()
 
-    # 1) Draw from Beta on (0,1)
-    # alpha,beta > 0; increase alpha/beta to change skew.[web:158][web:164]
-    beta_samples = np.random.beta(alpha, beta, size=size)
+    n1 = int(n * p1)
+    n2 = n - n1
 
-    # 2) Scale to [low, high]
-    user_expenses = (low + (high - low) * beta_samples).round(2).tolist()
+    idx1 = np.random.randint(0, len(data1), size=n1)
+    idx2 = np.random.randint(0, len(data2), size=n2)
 
-    # 3) Create dates with 1–3 day gaps
+    samples = np.concatenate([data1[idx1], data2[idx2]])
+    np.random.shuffle(samples)
+
+    user_expenses = samples.round(2).tolist()
+
     start = pd.Timestamp("2025-01-01")
     dates = []
     current = start
-    for _ in range(size):
+    for _ in range(n):
         dates.append(current)
         gap = np.random.choice([1, 1, 2, 3])
         current = current + pd.Timedelta(days=gap)
 
     user_dates = [d.strftime("%Y-%m-%d") for d in dates]
 
-    # Optional: debug prints
-    print("Number of expenses:", len(user_expenses))
-    print("Number of dates:", len(user_dates))
-    print("First 5 amounts:", user_expenses[:5])
-    print("First 5 dates:", user_dates[:5])
-
     return user_expenses[:-1], user_dates[:-1]
-
 
 if __name__ == '__main__':
 
