@@ -20,12 +20,11 @@ if __name__ == '__main__':
 
     user_expenses,user_dates= md.Generate_sample()
     print('Generated')
-    # avg = md.Predict()
-    # forecast_mumbai_inr = np.array(avg)  # example values
-    # forecast_city_inr = forecast_mumbai_inr * scale
+    avg = md.Predict()
+    forecast_mumbai_inr = np.array(avg)  # example values
+    forecast_city_inr = forecast_mumbai_inr * scale
 
-    # print("Mumbai forecast (INR):      ", forecast_mumbai_inr)
-    # print("Boston-scaled forecast (INR):", forecast_city_inr)
-    # print("Boston-scaled forecast (USD):", forecast_city_inr * scale)
-    #         # Predict_Model(model=model)
-    
+    print("Mumbai forecast (INR):      ", forecast_mumbai_inr)
+    print("Boston-scaled forecast (INR):", forecast_city_inr)
+    print("Boston-scaled forecast (USD):", forecast_city_inr * scale)
+            # Predict_Model(model=model)

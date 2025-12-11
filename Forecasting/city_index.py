@@ -2,8 +2,7 @@ import requests
 import numpy as np
 from . import conversion
 # import conversion
-
-RAPIDAPI_KEY = "aea1c9d920mshc5251b8f872c9e1p1a5a26jsn3106a948362e"
+from. import API_Config
 RAPIDAPI_HOST = "cost-of-living-and-prices.p.rapidapi.com"
 BASE_URL = "https://cost-of-living-and-prices.p.rapidapi.com/prices"
 
@@ -15,8 +14,9 @@ def fetch_city_data(city_name: str, country_name: str):
         "city_name": city_name,
         "country_name": country_name,
     }
+    key = API_Config.Get_COL_API_key()
     headers = {
-        "x-rapidapi-key": RAPIDAPI_KEY,
+        "x-rapidapi-key": key ,
         "x-rapidapi-host": RAPIDAPI_HOST,
     }
     resp = requests.get(url, headers=headers, params=querystring)

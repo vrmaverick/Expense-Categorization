@@ -1,3 +1,4 @@
+import pandas as pd
 def optimize_answer(df_context, question: str) -> str:
     """
     Given a dataframe with columns like ['date','expense','category','is_forecast', ...]
