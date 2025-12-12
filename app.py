@@ -162,6 +162,7 @@ from Categorization.categorizer import Categorization
 import Forecasting.Model as md
 from Forecasting.conversion import city
 from Forecasting.Distribution import Distributions
+from Optimization.optimize import optimize_answer
 
 # ---------------- Page config ----------------
 st.set_page_config(
@@ -593,9 +594,9 @@ with tab_forecast:
             df_forecast = pd.DataFrame(
                 {
                     "date": [forecast_end],
-                    f"forecast_{city_name}_{model_currency}_window_sum": [forecast_window_sum],
-                    f"forecast_{city_name}_{model_currency}_avg_daily": [avg_daily_inr],
-                    f"forecast_{city_name}_{output_currency}": [forecast_city_inr],
+                    f"forecast {model_currency} Monthly": [forecast_window_sum],
+                    f"forecast {model_currency} Daily Average": [avg_daily_inr],
+                    f"forecast {city_name} {output_currency} Next Month": [forecast_city_inr],
                 }
             )
 
