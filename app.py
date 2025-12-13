@@ -360,7 +360,7 @@ with tab_home:
             st.markdown(
                 """
                 - **Data sources:** Two Kaggle finance datasets in INR plus a labeled dataset for categorization.
-                - **Baes Models tested:** Exponential Smoothing, SARIMA, Prophet, Random Forest, Gradient Boosting, Ridge, and an ensemble tuned on MAE.
+                - **Base models tested:** Exponential Smoothing, SARIMA, Prophet, Random Forest, Gradient Boosting, Ridge, and an ensemble tuned on MAE.
                 - **Optimization:** LLM-powered optimization agent for budget advice, subscription cleanup, and goal-based planning.
                 """
             )
@@ -375,11 +375,40 @@ with tab_home:
         st.markdown(
             """
             **Team 104**
-            - Viraj: EDA, LLM integration, APIs, frontend, Plaid integration.[file:193]
-            - Vedant: Distribution modeling, hypothesis testing, forecasting module.[file:193]
-            - Archita: Categorization engine (TF‑IDF → USE → MiniLM), SVM+XGBoost ensemble.[file:193]
+            - Viraj: EDA, LLM integration, APIs, frontend, Plaid integration.
+            - Vedant: Distribution modeling, hypothesis testing, forecasting module.
+            - Archita: Categorization engine (TF‑IDF → USE → MiniLM), SVM+XGBoost ensemble.
             """
         )
+
+    st.markdown("---")
+
+    st.subheader("Plaid-powered Mint Sage prototype")
+    st.markdown(
+        """
+        The video below shows a more advanced version of Mint Sage where banking and card
+        accounts are securely connected via the Plaid API, with transactions linked to
+        the user's email and phone number. This prototype demonstrates real-time ingestion
+        of financial data, categorization, forecasting, and optimization on live accounts.
+        """,
+        unsafe_allow_html=False,
+    )
+
+    st.markdown(
+        """
+        <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+          <iframe src="https://www.loom.com/embed/c3ffa141d13849fbb1717c88a2385009"
+                  frameborder="0"
+                  webkitallowfullscreen
+                  mozallowfullscreen
+                  allowfullscreen
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+          </iframe>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 
 # ---------------- Categorization tab ----------------
