@@ -139,5 +139,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 .secrets.yaml
+secrets.yaml
 .myenv/
 myenv/

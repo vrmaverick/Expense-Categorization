@@ -666,6 +666,7 @@ with tab_forecast:
         m2.metric("CPU usage (%)", f"{cpu_after}")
         m3.metric("Memory usage (%)", f"{mem_after}")
 
+
 with tab_opt:
     st.header("Optimization assistant")
 
